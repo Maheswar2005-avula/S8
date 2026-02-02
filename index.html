@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Harshitha | Forever</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@1,400;1,700&family=Montserrat:wght@300;400;600&display=swap');
+
+        :root {
+            --gold: #d4af37;
+            --pink: #ffafcc;
+            --bg-dark: #080808;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- IMMERSIVE BACKGROUND --- */
+        #emoji-layer {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            width: 90%;
+            max-width: 420px;
+            background: var(--glass);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 35px;
+            padding: 40px 25px;
+            text-align: center;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+        }
+
+        /* --- ANIMATED ASSETS --- */
+        .bear-sticker {
+            width: 130px;
+            height: 130px;
+            margin: 0 auto 20px;
+            display: block;
+        }
+
+        /* --- SCREENS --- */
+        .screen { display: none; opacity: 0; transform: translateY(20px); transition: 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
+        .screen.active { display: block; opacity: 1; transform: translateY(0); }
+
+        h1 {
+            font-family: 'Bodoni Moda', serif;
+            font-size: 2.2rem;
+            color: var(--gold);
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 30px;
+        }
+
+        /* --- GIFT NAVIGATION --- */
+        .gift-menu { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .gift-item {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .gift-item:hover { border-color: var(--gold); transform: translateY(-5px); }
+        .gift-item i { font-size: 1.8rem; display: block; margin-bottom: 10px; }
+
+        /* --- BUTTONS --- */
+        .btn-gold {
+            background: var(--gold);
+            color: #000;
+            border: none;
+            padding: 16px 0;
+            width: 100%;
+            border-radius: 100px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-gold:active { transform: scale(0.96); }
+
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            color: rgba(255,255,255,0.4);
+            font-size: 0.75rem;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        /* --- QUIZ & NO BUTTON --- */
+        .quiz-option {
+            background: rgba(255,255,255,0.08);
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .quiz-option:hover { background: var(--gold); color: #000; }
+
+        #no-btn {
+            background: transparent;
+            color: rgba(255,255,255,0.4);
+            border: none;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+
+        .letter-scroll {
+            text-align: left;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            max-height: 250px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="emoji-layer"></canvas>
+
+<div class="container">
+    <div class="screen active" id="menu">
+        <img class="bear-sticker" src="cuteteddy.jpg" style="border-radius: 70%; " alt="Cute Bear">
+        <h1>For Harshitha</h1>
+        <p>You've changed my life in ways I can't explain. I have 3 small gifts for you...</p>
+        <div class="gift-menu">
+            <div class="gift-item" onclick="show('quiz')"><i>🧠</i>Our Quiz</div>
+            <div class="gift-item" onclick="show('letter')"><i>✍️</i>My Letter</div>
+            <div class="gift-item" onclick="show('proposal')" style="grid-column: span 2;"><i>❤️</i>The Surprise</div>
+        </div>
+    </div>
+
+    <div class="screen" id="quiz">
+        <img class="bear-sticker" src="question.jpg" style="border-radius: 70%; " alt="Quiz Bear">
+        <h1>Quick Question...</h1>
+        <p>If the world was ending tomorrow, who is the first person I'd call?</p>
+        <div class="quiz-option" onclick="ans('correct')">Obviously Harshitha.</div>
+        <div class="quiz-option" onclick="ans('wrong')">Some random friend.</div>
+        <div class="quiz-option" onclick="ans('wrong')">Nobody.</div>
+        <div id="quiz-msg" style="margin-top:15px; font-style:italic; color:var(--gold);"></div>
+        <span class="back-link" onclick="show('menu')">Go Back</span>
+    </div>
+
+    <div class="screen" id="letter">
+        <img class="bear-sticker" src="friend.jpg" style="border-radius: 70%; " alt="Letter Bear">
+        <h1>To My Best Friend</h1>
+        <div class="letter-scroll">
+            <p>Dearest Harshitha,</p><br>
+            <p>I never planned on falling for my best friend. But when you look at me, the world just makes sense. You've seen me at my best and my worst, and you're still here.</p><br>
+            <p>I respect you, I admire your strength, and I promise to always protect your smile. You are my home.</p>
+        </div>
+        <span class="back-link" onclick="show('menu')">Done Reading</span>
+    </div>
+
+    <div class="screen" id="proposal">
+        <img class="bear-sticker" src="Gemini_Generated_Image_aowe8baowe8baowe.png" style="border-radius: 70%; " alt="Proposal Bear">
+        <h1>One more thing...</h1>
+        <p>Will you give me the honor of being yours forever? I want to spend every sunrise with you.</p>
+        <button class="btn-gold" onclick="show('success')">YES, I WILL! ❤️</button>
+        <button id="no-btn" onmouseover="dodge()" onclick="dodge()">No</button>
+        <div id="no-plea" style="margin-top:15px; font-size: 0.8rem; color:#ff7675; opacity:0;">This is not good for you if you're not with me... please tap on YES!</div>
+    </div>
+
+    <div class="screen" id="success">
+        <img class="bear-sticker" src="together.jpg" style="border-radius: 70%; " alt="Happy Bear">
+        <h1>Forever.</h1>
+        <p>You've made me the luckiest person in the world. I love you beyond words, Harshitha. ❤️</p>
+    </div>
+</div>
+
+<script>
+    // --- EMOJI BACKGROUND ENGINE ---
+    const canvas = document.getElementById('emoji-layer');
+    const ctx = canvas.getContext('2d');
+    const icons = ['❤️','🥰','😍','💕','🫰','🫶','🫂','🩷','💌','🏩','💐','❤️‍🔥','💓','💜','🌹','💘'];
+    let particles = [];
+
+    function init() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    class Particle {
+        constructor() { this.reset(); this.y = Math.random()*canvas.height; }
+        reset() { this.x = Math.random()*canvas.width; this.y = canvas.height + 50; this.e = icons[Math.floor(Math.random()*icons.length)]; this.s = Math.random()*15+15; this.v = Math.random()*1+0.4; this.o = Math.random()*0.4; }
+        update() { this.y -= this.v; if(this.y < -50) this.reset(); }
+        draw() { ctx.globalAlpha = this.o; ctx.font = `${this.s}px serif`; ctx.fillText(this.e, this.x, this.y); }
+    }
+    for(let i=0; i<35; i++) particles.push(new Particle());
+    function animate() { ctx.clearRect(0,0,canvas.width,canvas.height); particles.forEach(p=>{p.update(); p.draw();}); requestAnimationFrame(animate); }
+    init(); animate(); window.onresize = init;
+
+    // --- NAVIGATION ---
+    function show(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        setTimeout(() => document.getElementById(id).classList.add('active'), 100);
+    }
+
+    function ans(type) {
+        const msg = document.getElementById('quiz-msg');
+        msg.innerText = type === 'correct' ? "Correct! You know me too well. ❤️" : "Try again... you know the answer is you.";
+    }
+
+    // --- PHYSICS DODGE ---
+    function dodge() {
+        const btn = document.getElementById('no-btn');
+        const plea = document.getElementById('no-plea');
+        plea.style.opacity = '1';
+        
+        const x = Math.random() * (window.innerWidth - 100);
+        const y = Math.random() * (window.innerHeight - 50);
+        btn.style.position = 'fixed';
+        btn.style.left = x + 'px';
+        btn.style.top = y + 'px';
+    }
+</script>
+
+</body>
+</html>
